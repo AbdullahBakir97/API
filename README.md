@@ -78,7 +78,7 @@ The following API endpoints are available:
 
 ## Authors
 
-- [Abdullah Bakir](https://github.com/AbdullahBakir97.png)
+- [Abdullah Bakir](https://github.com/AbdullahBakir97)
 
 ## License
 
