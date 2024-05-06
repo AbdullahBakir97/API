@@ -1,5 +1,6 @@
 from rest_framework import generics, filters
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
 from .models import Team, Player, Match, FantasyTeam, Contest, ContestEntry
 from .serializers import TeamSerializer, PlayerSerializer, MatchSerializer, FantasyTeamSerializer, ContestSerializer, ContestEntrySerializer
 from .filters import TeamFilter, PlayerFilter, MatchFilter, FantasyTeamFilter, ContestFilter, ContestEntryFilter
@@ -11,7 +12,11 @@ from allauth.account.views import ConfirmEmailView
 from allauth.account import app_settings as allauth_settings
 from allauth.account.utils import complete_signup
 from django.contrib.auth import get_user_model
-
+from dj_rest_auth.views import (
+    LoginView, LogoutView, PasswordChangeView,
+    PasswordResetView, PasswordResetConfirmView,
+)
+from dj_rest_auth.registration.serializers import RegisterSerializer
 from .serializers import (
     SignupSerializer,
     LoginSerializer,
@@ -23,60 +28,50 @@ from .serializers import (
 
 
 class SignupAPIView(generics.CreateAPIView):
-    serializer_class = SignupSerializer
-
+    """
+    View for user registration.
+    """
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
+    
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            if get_user_model().objects.filter(email=email).exists():
-                return Response({"error": "Email address already exists"}, status=status.HTTP_400_BAD_REQUEST)
-            user = serializer.save(request=self.request)
-            return Response({"detail": "Verification e-mail sent"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginAPIView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-    # permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            # Perform custom authentication logic here if needed
-            return Response(serializer.validated_data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-    
-class LogoutAPIView(generics.GenericAPIView):
-    permission_classes = (IsAuthenticated,)
+    def perform_create(self, serializer):
+        serializer.save(request=self.request)
 
-    def post(self, request, *args, **kwargs):
-        # Delete the user's authentication token
-        request.user.auth_token.delete()
-        return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+class LoginAPIView(LoginView):
+    """
+    View for user login.
+    Inherits from dj_rest_auth's LoginView.
+    """
 
-class ChangePasswordAPIView(generics.UpdateAPIView):
-    serializer_class = ChangePasswordSerializer
-    permission_classes = [IsAuthenticated]
+class LogoutAPIView(LogoutView):
+    """
+    View for user logout.
+    Inherits from dj_rest_auth's LogoutView.
+    """
 
-    def get_object(self):
-        return self.request.user
+class PasswordChangeAPIView(PasswordChangeView):
+    """
+    View for changing password.
+    Inherits from dj_rest_auth's PasswordChangeView.
+    """
 
-class PasswordResetAPIView(generics.CreateAPIView):
-    serializer_class = PasswordResetSerializer
-    permission_classes = [IsAuthenticated]
+class PasswordResetAPIView(PasswordResetView):
+    """
+    View for initiating password reset process.
+    Inherits from dj_rest_auth's PasswordResetView.
+    """
 
-class PasswordResetConfirmAPIView(generics.GenericAPIView):
-    serializer_class = PasswordResetConfirmSerializer
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"detail": "Password has been reset successfully"}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+class PasswordResetConfirmAPIView(PasswordResetConfirmView):
+    """
+    View for confirming password reset process.
+    Inherits from dj_rest_auth's PasswordResetConfirmView.
+    """
 class TeamList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer

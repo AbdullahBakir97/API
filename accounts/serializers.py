@@ -3,6 +3,7 @@ from .models import Team, Player, Match, FantasyTeam, Contest, ContestEntry
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
 
+
 User = get_user_model()
 
 class SignupSerializer(serializers.Serializer):
@@ -19,8 +20,10 @@ class SignupSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         """Create new user."""
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(username=validated_data['username'], email=validated_data['email'], password=validated_data['password'])
         return user
+
+
 
 class LoginSerializer(serializers.Serializer):
     """Serializer for user login."""

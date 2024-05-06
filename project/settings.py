@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,10 +47,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'dj_rest_auth',
     'drf_yasg',
+    'dj_rest_auth.registration',
     
-    # my apps
-    'accounts',
+
+    
     
 ]
 
@@ -59,8 +62,12 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        
+        'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'dj_rest_auth.serializers.RegisterSerializer',
 }
 
 MIDDLEWARE = [
