@@ -57,6 +57,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 The following API endpoints are available:
 
+- **Swagger**: /swagger/
 - **Signup**: /accounts/signup/ (POST)
 - **Login**: /accounts/login/ (POST)
 - **Logout**: /accounts/logout/ (POST)
