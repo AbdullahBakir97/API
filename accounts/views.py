@@ -73,6 +73,9 @@ class PasswordResetConfirmAPIView(PasswordResetConfirmView):
     Inherits from dj_rest_auth's PasswordResetConfirmView.
     """
 class TeamList(generics.ListCreateAPIView):
+    """
+    API view to list and create teams.
+    """
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     filter_class = TeamFilter
@@ -84,12 +87,18 @@ class TeamList(generics.ListCreateAPIView):
 
 
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a team.
+    """
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = (IsAuthenticated,)
 
 
 class PlayerList(generics.ListCreateAPIView):
+    """
+    API view to list and create players.
+    """
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
     filter_class = PlayerFilter
@@ -101,12 +110,18 @@ class PlayerList(generics.ListCreateAPIView):
 
 
 class PlayerDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a player.
+    """
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
     # permission_classes = (IsAuthenticated,)
 
 
 class MatchList(generics.ListCreateAPIView):
+    """
+    API view to list and create matches.
+    """
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
     filter_class = MatchFilter
@@ -118,12 +133,18 @@ class MatchList(generics.ListCreateAPIView):
 
 
 class MatchDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a match.
+    """
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
     # permission_classes = (IsAuthenticated,)
 
 
 class FantasyTeamList(generics.ListCreateAPIView):
+    """
+    API view to list and create fantasy teams.
+    """
     queryset = FantasyTeam.objects.all()
     serializer_class = FantasyTeamSerializer
     filter_class = FantasyTeamFilter
@@ -135,12 +156,18 @@ class FantasyTeamList(generics.ListCreateAPIView):
 
 
 class FantasyTeamDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a fantasy team.
+    """
     queryset = FantasyTeam.objects.all()
     serializer_class = FantasyTeamSerializer
     # permission_classes = (IsAuthenticated,)
 
 
 class ContestList(generics.ListCreateAPIView):
+    """
+    API view to list and create contests.
+    """
     queryset = Contest.objects.all()
     serializer_class = ContestSerializer
     filter_class = ContestFilter
@@ -152,12 +179,18 @@ class ContestList(generics.ListCreateAPIView):
 
 
 class ContestDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a contest.
+    """
     queryset = Contest.objects.all()
     serializer_class = ContestSerializer
     # permission_classes = (IsAuthenticated,)
 
 
 class ContestEntryList(generics.ListCreateAPIView):
+    """
+    API view to list and create contest entries.
+    """
     queryset = ContestEntry.objects.all()
     serializer_class = ContestEntrySerializer
     filter_class = ContestEntryFilter
@@ -169,6 +202,9 @@ class ContestEntryList(generics.ListCreateAPIView):
 
 
 class ContestEntryDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view to retrieve, update, or delete a contest entry.
+    """
     queryset = ContestEntry.objects.all()
     serializer_class = ContestEntrySerializer
     # permission_classes = (IsAuthenticated,)
